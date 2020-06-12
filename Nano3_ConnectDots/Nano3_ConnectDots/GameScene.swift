@@ -18,9 +18,7 @@ struct PhysicsCategory{
 class GameScene: SKScene {
     
     var whale: SKSpriteNode!
-    
-    var dot1: SKSpriteNode!
-    var dot2: SKSpriteNode!
+    var dotConnected: Int = 0
     
     var changeColor: SKAction!
     
@@ -29,12 +27,11 @@ class GameScene: SKScene {
     var sfx: SKAudioNode!
     
     override func didMove(to view: SKView) {
-        print("warna ganti")
+         
         changeDotColor()
         
         whale = childNode(withName: "Whale") as! SKSpriteNode
-        dot1 = childNode(withName: "Dot2") as! SKSpriteNode
-        dot2 = childNode(withName: "Dot3") as! SKSpriteNode
+        
     
         physicsWorld.contactDelegate = self
     }
@@ -100,25 +97,49 @@ class GameScene: SKScene {
         changeColor = SKAction.setTexture(textures)
         print("warna ganti")
     }
+    
 }
 
 extension GameScene: SKPhysicsContactDelegate{
     func didBegin(_ contact: SKPhysicsContact) {
         
-        print("masuk contact")
+        //print("masuk contact")
+        //var stringnode: String
         
         let contactMask = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
         
         if contactMask == PhysicsCategory.dot2 | PhysicsCategory.whale{
             
+            if dotConnected >= 0 {
+                let node = contact.bodyA.node?.name == "Whale" ? contact.bodyB.node : contact.bodyA.node
+                
+                print(node?.name)
+                //stringnode = node!.name!
+                //let newstring = stringnode.filter { "0"..."9" ~= $0 }
+                
+                if node?.name! == "Dot\(dotConnected+1)" {
+                    node?.physicsBody?.contactTestBitMask = 0
+                    node?.run(changeColor)
+                    
+                    dotConnected += 1
+                }
+                
+                //dotConnected = Int(newstring)!
+                print("dotconnected = \(dotConnected)")
+            }
+            
+            if dotConnected == 17 {
+                //self.removeAllChildren()
+                for child in 1...17 {
+                   let x = childNode(withName: "Dot\(child)")
+                    x?.removeFromParent()
+                }
+            }
+            
             //print(contact.bodyA.node?.name)
             //print(contact.bodyB.node?.name)
-            let node = contact.bodyA.node?.name == "Whale" ? contact.bodyB.node : contact.bodyA.node
             
-            print(node?.name)
             
-            node?.physicsBody?.contactTestBitMask = 0
-            node?.run(changeColor)
         }
     }
 
