@@ -18,6 +18,8 @@ struct PhysicsCategory{
 class GameScene: SKScene {
     
     var whale: SKSpriteNode!
+    var outline: SKSpriteNode!
+    
     var dotConnected: Int = 0
     
     var changeColor: SKAction!
@@ -31,8 +33,8 @@ class GameScene: SKScene {
         changeDotColor()
         
         whale = childNode(withName: "Whale") as! SKSpriteNode
+        outline = childNode(withName: "Outline") as! SKSpriteNode
         
-    
         physicsWorld.contactDelegate = self
     }
     
@@ -90,12 +92,30 @@ class GameScene: SKScene {
         whale.position = CGPoint(x:whale.position.x+dx, y:whale.position.y+dy)
     }
     
+    func spawnAnimal() {
+        print("finished!")
+        let whaleFinish = SKSpriteNode(imageNamed: "whalebig")
+        whaleFinish.setScale(1.5)
+        whaleFinish.position = CGPoint(x: 800, y: 500)
+        
+        let whaleText = SKSpriteNode(imageNamed: "whaletext")
+        whaleText.setScale(2.5)
+        whaleText.position = CGPoint(x: 880, y: 100)
+        
+        let moveAction = SKAction.moveBy(x: -200, y:0, duration: 1.0)
+        let movebackAction = SKAction.moveBy(x: 250, y: 0, duration: 1.0)
+        
+        addChild(whaleFinish)
+        addChild(whaleText)
+        whaleFinish.run(SKAction.sequence([moveAction, movebackAction]))
+    }
+    
     func changeDotColor() {
         var textures: SKTexture
         textures = SKTexture(imageNamed: "dotyellow")
         
         changeColor = SKAction.setTexture(textures)
-        print("warna ganti")
+        
     }
     
 }
@@ -107,11 +127,15 @@ extension GameScene: SKPhysicsContactDelegate{
         //var stringnode: String
         
         let contactMask = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
+//        let soundNode = SKAudioNode(fileNamed: "flaunch.wav")
+//        soundNode.autoplayLooped = false
+//        addChild(soundNode)
         
         if contactMask == PhysicsCategory.dot2 | PhysicsCategory.whale{
             
             if dotConnected >= 0 {
                 let node = contact.bodyA.node?.name == "Whale" ? contact.bodyB.node : contact.bodyA.node
+                
                 
                 print(node?.name)
                 //stringnode = node!.name!
@@ -120,6 +144,7 @@ extension GameScene: SKPhysicsContactDelegate{
                 if node?.name! == "Dot\(dotConnected+1)" {
                     node?.physicsBody?.contactTestBitMask = 0
                     node?.run(changeColor)
+                    //soundNode.run(SKAction.play())
                     
                     dotConnected += 1
                 }
@@ -130,10 +155,25 @@ extension GameScene: SKPhysicsContactDelegate{
             
             if dotConnected == 17 {
                 //self.removeAllChildren()
+//                let soundNode = SKAudioNode(fileNamed: "flaunch.wav")
+//                soundNode.autoplayLooped = false
+//                addChild(soundNode)
+                
+                let waitAction = SKAction.wait(forDuration: 2.0)
+                
+                run(waitAction)
+                
+                
                 for child in 1...17 {
                    let x = childNode(withName: "Dot\(child)")
                     x?.removeFromParent()
                 }
+                
+//                soundNode.run(SKAction.play())
+                whale.removeFromParent()
+                outline.removeFromParent()
+                
+                spawnAnimal()
             }
             
             //print(contact.bodyA.node?.name)
