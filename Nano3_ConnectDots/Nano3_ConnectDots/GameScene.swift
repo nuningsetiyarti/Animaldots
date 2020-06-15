@@ -19,6 +19,7 @@ class GameScene: SKScene {
     
     var whale: SKSpriteNode!
     var outline: SKSpriteNode!
+    var swipe: SKSpriteNode!
     
     var dotConnected: Int = 0
     
@@ -34,6 +35,15 @@ class GameScene: SKScene {
         
         whale = childNode(withName: "Whale") as! SKSpriteNode
         outline = childNode(withName: "Outline") as! SKSpriteNode
+        swipe = childNode(withName: "Swipe") as! SKSpriteNode
+        
+        let swipeExample = SKAction.moveBy(x: 120, y:0, duration: 1.0)
+        let swipeBackExample = SKAction.moveBy(x:-120, y:0, duration: 1.0)
+        
+        let swipeAnimation = SKAction.sequence([swipeExample, swipeBackExample])
+        let swipeTutorial = SKAction.repeatForever(swipeAnimation)
+        
+        swipe.run(swipeTutorial)
         
         physicsWorld.contactDelegate = self
     }
@@ -62,6 +72,8 @@ class GameScene: SKScene {
        for touch in touches {
            location = touch.location(in: self)
        }
+        
+        swipe.removeFromParent()
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -127,8 +139,11 @@ extension GameScene: SKPhysicsContactDelegate{
         //var stringnode: String
         
         let contactMask = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
+        let soundAction = SKAction.playSoundFileNamed("positive10_zapsplat.mp3", waitForCompletion: true)
+        let volumeAction = SKAction.changeVolume(to: 0.3, duration: 0)
 //        let soundNode = SKAudioNode(fileNamed: "flaunch.wav")
 //        soundNode.autoplayLooped = false
+//
 //        addChild(soundNode)
         
         if contactMask == PhysicsCategory.dot2 | PhysicsCategory.whale{
@@ -143,12 +158,13 @@ extension GameScene: SKPhysicsContactDelegate{
                 
                 if node?.name! == "Dot\(dotConnected+1)" {
                     node?.physicsBody?.contactTestBitMask = 0
-                    node?.run(changeColor)
+                    node?.run(SKAction.group([soundAction, volumeAction, changeColor]))
                     //soundNode.run(SKAction.play())
+                    
                     
                     dotConnected += 1
                 }
-                
+                //soundNode.removeFromParent()
                 //dotConnected = Int(newstring)!
                 print("dotconnected = \(dotConnected)")
             }
@@ -158,10 +174,10 @@ extension GameScene: SKPhysicsContactDelegate{
 //                let soundNode = SKAudioNode(fileNamed: "flaunch.wav")
 //                soundNode.autoplayLooped = false
 //                addChild(soundNode)
+                let soundFinishAction = SKAction.playSoundFileNamed("watery_zapsplat.mp3", waitForCompletion: true)
+                let waitAction = SKAction.wait(forDuration: 1.5)
                 
-                let waitAction = SKAction.wait(forDuration: 2.0)
-                
-                run(waitAction)
+                run(SKAction.sequence([volumeAction, soundFinishAction, waitAction]))
                 
                 
                 for child in 1...17 {
@@ -169,7 +185,8 @@ extension GameScene: SKPhysicsContactDelegate{
                     x?.removeFromParent()
                 }
                 
-//                soundNode.run(SKAction.play())
+                //soundNode.run(SKAction.play())
+                //soundNode.removeFromParent()
                 whale.removeFromParent()
                 outline.removeFromParent()
                 

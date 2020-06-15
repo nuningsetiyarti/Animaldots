@@ -16,6 +16,8 @@
 		AB8868942491EDA600100316 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AB8868932491EDA600100316 /* Assets.xcassets */; };
 		AB8868972491EDA600100316 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AB8868952491EDA600100316 /* LaunchScreen.storyboard */; };
 		AB8868A1249267A600100316 /* flaunch.wav in Resources */ = {isa = PBXBuildFile; fileRef = AB8868A0249267A600100316 /* flaunch.wav */; };
+		AB9CCD7024961CC000ED72FB /* positive10_zapsplat.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = AB9CCD6F24961CC000ED72FB /* positive10_zapsplat.mp3 */; };
+		AB9CCD7224961CCC00ED72FB /* watery_zapsplat.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = AB9CCD7124961CCC00ED72FB /* watery_zapsplat.mp3 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +32,8 @@
 		AB8868962491EDA600100316 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		AB8868982491EDA600100316 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AB8868A0249267A600100316 /* flaunch.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = flaunch.wav; sourceTree = "<group>"; };
+		AB9CCD6F24961CC000ED72FB /* positive10_zapsplat.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = positive10_zapsplat.mp3; sourceTree = "<group>"; };
+		AB9CCD7124961CCC00ED72FB /* watery_zapsplat.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = watery_zapsplat.mp3; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +74,8 @@
 				AB8868902491EDA500100316 /* Main.storyboard */,
 				AB8868932491EDA600100316 /* Assets.xcassets */,
 				AB8868952491EDA600100316 /* LaunchScreen.storyboard */,
+				AB9CCD6F24961CC000ED72FB /* positive10_zapsplat.mp3 */,
+				AB9CCD7124961CCC00ED72FB /* watery_zapsplat.mp3 */,
 				AB8868982491EDA600100316 /* Info.plist */,
 				AB8868A0249267A600100316 /* flaunch.wav */,
 			);
@@ -134,8 +140,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AB9CCD7024961CC000ED72FB /* positive10_zapsplat.mp3 in Resources */,
 				AB8868922491EDA500100316 /* Main.storyboard in Resources */,
 				AB8868892491EDA500100316 /* GameScene.sks in Resources */,
+				AB9CCD7224961CCC00ED72FB /* watery_zapsplat.mp3 in Resources */,
 				AB8868A1249267A600100316 /* flaunch.wav in Resources */,
 				AB8868942491EDA600100316 /* Assets.xcassets in Resources */,
 				AB8868972491EDA600100316 /* LaunchScreen.storyboard in Resources */,
