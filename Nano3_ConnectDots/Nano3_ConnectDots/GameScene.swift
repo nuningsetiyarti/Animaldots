@@ -24,13 +24,15 @@ class GameScene: SKScene {
     var dotConnected: Int = 0
     
     var changeColor: SKAction!
+    var animateDot: SKAction!
     
     var touched:Bool = false
     var location = CGPoint.zero
     var sfx: SKAudioNode!
     
     override func didMove(to view: SKView) {
-         
+        //let backgroundSound = SKAudioNode(fileNamed: "bg.mp3")
+        //self.addChild(backgroundSound)
         changeDotColor()
         
         whale = childNode(withName: "Whale") as! SKSpriteNode
@@ -43,6 +45,7 @@ class GameScene: SKScene {
         let swipeAnimation = SKAction.sequence([swipeExample, swipeBackExample])
         let swipeTutorial = SKAction.repeatForever(swipeAnimation)
         
+        animateNextDot(node: childNode(withName: "Dot1")!)
         swipe.run(swipeTutorial)
         
         physicsWorld.contactDelegate = self
@@ -94,8 +97,29 @@ class GameScene: SKScene {
     
     func moveNodeToLocation() {
         // Compute vector components in direction of the touch
-        var dx = location.x - whale.position.x
-        var dy = location.y - whale.position.y
+        var dx: CGFloat = location.x
+        var dy: CGFloat = location.y
+        
+        if location.x > 320 && location.x < 1440{
+            dx = location.x - whale.position.x
+        }
+        else if location.x < 320{
+            dx = 320 - whale.position.x
+        }
+        else if location.x > 1440{
+            dx = 1440 - whale.position.x
+        }
+        
+        if location.y > 120 && location.y < 720{
+            dy = location.y - whale.position.y
+        }
+        else if location.y < 120{
+            dy = 120 - whale.position.y
+        }
+        else if location.y > 720{
+            dy = 720 - whale.position.y
+        }
+        
         // How fast to move the node. Adjust this as needed
         let speed:CGFloat = 0.25
         // Scale vector
@@ -105,7 +129,7 @@ class GameScene: SKScene {
     }
     
     func spawnAnimal() {
-        print("finished!")
+        //print("finished!")
         let whaleFinish = SKSpriteNode(imageNamed: "whalebig")
         whaleFinish.setScale(1.5)
         whaleFinish.position = CGPoint(x: 800, y: 500)
@@ -120,6 +144,14 @@ class GameScene: SKScene {
         addChild(whaleFinish)
         addChild(whaleText)
         whaleFinish.run(SKAction.sequence([moveAction, movebackAction]))
+    }
+    
+    func animateNextDot(node: SKNode){
+        var animateTexture = [SKTexture]()
+        animateTexture.append(SKTexture(imageNamed: "dotblack"))
+        animateTexture.append(SKTexture(imageNamed: "dotorange"))
+        
+        node.run(SKAction.repeatForever(SKAction.animate(with: animateTexture, timePerFrame: 0.25)))
     }
     
     func changeDotColor() {
@@ -146,17 +178,26 @@ extension GameScene: SKPhysicsContactDelegate{
 //
 //        addChild(soundNode)
         
+        
+        
+        if dotConnected > 0 && dotConnected < 17{
+            let nextnode = childNode(withName: "Dot\(dotConnected+1)")!
+            animateNextDot(node: nextnode)
+        }
+        
+        
         if contactMask == PhysicsCategory.dot2 | PhysicsCategory.whale{
             
             if dotConnected >= 0 {
                 let node = contact.bodyA.node?.name == "Whale" ? contact.bodyB.node : contact.bodyA.node
                 
                 
-                print(node?.name)
+                //print(node?.name)
                 //stringnode = node!.name!
                 //let newstring = stringnode.filter { "0"..."9" ~= $0 }
                 
                 if node?.name! == "Dot\(dotConnected+1)" {
+                    node?.removeAllActions()
                     node?.physicsBody?.contactTestBitMask = 0
                     node?.run(SKAction.group([soundAction, volumeAction, changeColor]))
                     //soundNode.run(SKAction.play())
@@ -166,7 +207,7 @@ extension GameScene: SKPhysicsContactDelegate{
                 }
                 //soundNode.removeFromParent()
                 //dotConnected = Int(newstring)!
-                print("dotconnected = \(dotConnected)")
+                //print("dotconnected = \(dotConnected)")
             }
             
             if dotConnected == 17 {
@@ -175,10 +216,10 @@ extension GameScene: SKPhysicsContactDelegate{
 //                soundNode.autoplayLooped = false
 //                addChild(soundNode)
                 let soundFinishAction = SKAction.playSoundFileNamed("watery_zapsplat.mp3", waitForCompletion: true)
-                let waitAction = SKAction.wait(forDuration: 1.5)
+                //let waitAction = SKAction.wait(forDuration: 1.5)
                 
-                run(SKAction.sequence([volumeAction, soundFinishAction, waitAction]))
-                
+                run(SKAction.group([volumeAction, soundFinishAction]))
+                //run(waitAction)
                 
                 for child in 1...17 {
                    let x = childNode(withName: "Dot\(child)")
